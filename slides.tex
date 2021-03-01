@@ -1,91 +1,291 @@
-%% V0.1
-%% 2020/10/09
-%% by Markus Goetz
+\documentclass[
+  aspectratio=1610, %default screen size (4:3); other values: 1610, 169, 149, 54, 32
+% handout,
+%  smaller, %uncomment this to fit more text onto the slides (similar to the CD suggestions)
+  %intlimits %put limits of integrals above and below the integral symbol
+]{beamer}
 
-\documentclass[aspectratio=1610]{beamer}
+%\usepackage[ngerman]{babel}
+%\usepackage[english]{babel}
+%\usepackage[UKenglish]{babel}
+
+%my favourite packages
+%\usepackage[latin1]{inputenc} %type in accented characters easily, i. e. ä instead of \"a 
+%\usepackage{siunitx} %easy input & nice formatting of phys. quantities (number + SI unit)
+%\usepackage{latexsym}
+%\usepackage{amssymb}
+%\usepackage{movie15}
+%\usepackage{animate}
+%\usepackage{ragged2e}\RaggedRight
+\usepackage{ifthen}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% some optional settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%uncomment this if you want the title page text aligned flushleft; CD rules seem to
+%demand this, although it looks awful
+%\def\titleflushleft{}
+
+%uncomment this if you want frame titles centered
+%\def\frametitlecentered{}
+
+%uncomment this if you don't like the wallclock
+%do not want clock, does not work with okular
+\def\noclock{}
+
+%uncomment this if you don't like the navigation buttons
+%\def\nonavigation{}
+
+%uncomment this if you want Arial as the main text font (very ugly),
+%no matching math font, using CM-Bright for math text
+%\def\arial{}
+
+%uncomment this if you want Helvetica as the main text font (very ugly),
+%Helvetica is very similar to Arial; again, no matching math font, using CM-Bright for
+%math text
+%\def\helvetica{}
+
 
 \usepackage{helmholtzai}
 
-\title{My Awesome ML}
-\subtitle{a test of time}
-\author{Susanne Doe}
-\date{YYYY-MM-DD}
-\institute{Insitute of Things}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hypersetup{%
+  breaklinks,colorlinks,
+  %pdfpagemode=FullScreen,
+  pdfhighlight=/P,
+  linkcolor=hgfdarkblue,
+  linkcolor=hgfdarkblue,
+  anchorcolor=hgfdarkblue,
+  citecolor=hgfdarkblue,
+  filecolor=hgfdarkblue,
+  menucolor=hgfdarkblue,
+  runcolor=hgfdarkblue,
+  urlcolor=hgfdarkblue
+}
+
+% \usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+% \usepackage{sistyle}
+% \usepackage[english]{isodate}
+% \usepackage[version=3]{ageschem}
+%\usepackage{picins}
+% \usepackage{url}
+% \usepackage{tabularx}
+% \usepackage{multimedia}
+
+%\usepackage{etex}
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,positioning,fit,petri,calc,shapes.geometric,scopes,fit,spy}
+\usepackage{pgfplots}
+\pgfplotsset{,compat=1.11}
+\tikzset{/pgf/number format/1000 sep={\,}}
+%\usepackage[version=3]{mhchem}
+\usepackage{calc}
+\usepackage[fixed]{fontawesome5}
+
+%\usepackage[export]{adjustbox}
+
+%\usepackage{enotez}
+%\def\enmarkstyle{\tiny}
+
+% \usepackage{python}
+
+% \usepackage{dashrule}
+
+%\usepackage{appendixnumberbeamer}
+
+%\input{UserFunkt.tex}
+%\SIstyle{USA}
+
+\title{%
+ How did we learn
+}
+\subtitle{DeepLearning540 - Lesson 06 
+}
+%[short version of authors to be used in footlines]{long version in the title page}
+\author{{Peter Steinbach}}
+
+\date{3rd~March~2021}
+
+\institute{%
+ \iflanguage{ngerman}{%
+  Zentralabteilung Informationsdienste und Computing, Helmholtz-Zentrum Dresden-Rossendorf
+ }{%
+  Department of Information Services and Computing, Helmholtz-Zentrum Dresden-Rossendorf
+ }%
+}
+
+
+
+%%%%%%%%%%%% document content starts here  %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\AtBeginSubsection
+
+\definecolor{darkgreen}{RGB}{0,130,0}
+
+% \makeatletter
+% \let\old@section\section
+% \let\section\relax
+% \newcommand\section{%
+%  \@ifstar\mySectionStar\mySectionNoStar%
+% }%
+% \newcommand\mySectionNoStar[1]{%
+%   \old@section{#1}%
+%   \noautobookmark%add excerpt from toc to beginning of section
+%   \frame{\frametitle{#1}\tableofcontents[currentsection]}%
+%   \autobookmark
+% }%
+% \newcommand\mySectionStar[1]{%
+%   \old@section*{#1}%
+% }%
+% \makeatother
+
+\renewcommand\footnotesize{\tiny}
+\newlength\mytextheight
+
+\newlength\tmplength
+
+\renewcommand\emph{\textbf}
+
+\input{figures/ann.tex}
+\input{figures/mlp.tex}
+
+\renewcommand{\arraystretch}{1.2}
+
+% required for pygment syntax-highlighting
+\usepackage{fancyvrb}
+\input{pygments.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
 
 \begin{document}
-
+ 
 \maketitle
 
-\begin{frame}
-    \frametitle{Single Title}
-    
-    \begin{itemize}
-        \item Suppose $a$
-        \item Also note b
-    \end{itemize}
-\end{frame}
+ \section{Neural Networks}
 
 \begin{frame}
-    \frametitle{Slide title}
-    \framesubtitle{\textbf{Subtitle} and \emph{more}}
-    
-    \begin{itemize}
-        \item Suppose $a$
-        \item Also note b
-        \begin{itemize}
-            \item This entails
-            \item Remember also
-            \begin{itemize}
-                \item I almost forgot
-                \item Envision
-            \end{itemize}
-        \end{itemize}
-    \end{itemize}
+ \frametitle{Artificial Neural Networks}
+ \begin{center}
+   \alert{Basis for Deep Learning!}
+ \end{center}
+ \pause
+ \begin{exampleblock}{Gedankenexperiment}
+   \begin{itemize}
+   \item input: 3 temperature sensors in 2 level house (attic, living, cellar)
+   \item 3 inputs, $\vec{x} \in \mathbf{R}^3$
+   \item goal: what is the probability of having summer?
+   \item 2 outputs (prob. for summer, prob. of winter)
+     $\vec{y} \in \mathbf{R}^2$
+   \item we obtained training data for the last decade!
+   \end{itemize}
+   \centering
+   \textbf{supervised learning!}
+ \end{exampleblock}
 \end{frame}
+ 
+ \begin{frame}
+ \frametitle{Artificial Neural Networks simplified}
+ \begin{center}
+  \tikzANN{}
+\end{center}
 
+\end{frame}
 
 \begin{frame}
-\frametitle{Equations}
-
-    \begin{equation*}
-        f(x) = \sum_i wx_i^2 + \frac{\beta}{2}
-    \end{equation*}
+ \frametitle{Artificial Neural Networks---Activation functions}
+ \begin{columns}
+  \begin{column}{\linewidth/5*3}
+   \begin{tikzpicture}
+    \begin{axis} [
+      legend pos=north west,
+      legend/.style={font=\small},
+      xmin=-5,xmax=5,
+      ymin=0,ymax=1,
+      width=\linewidth,
+     ]
+     \addplot[mark=none,blue] {1/(1+exp(-x))};
+     \addlegendentry{$\sigma(x)$}
+     \only<2>{
+      \addplot[mark=none] {x/5};
+      \addlegendentry{$R(x)$}
+     }
+    \end{axis}
+   \end{tikzpicture}
+  \end{column}
+  \begin{column}{\linewidth/5*2}
+   \begin{itemize}
+    \item sigmoid
+     \[
+      \sigma(x) = \frac{1}{1+\mathrm{e}^{-x}}
+     \]
+    \item<2> ReLU (scaled)
+     \[
+      R(x) = \begin{cases}
+       0 & x \leq 0 \\
+       x & x > 0\\
+      \end{cases}
+     \]
+   \end{itemize}
+  \end{column}
+ \end{columns}
 \end{frame}
 
+%% input to MLP
 
-\begin{frame}
-    \frametitle{Columns and Figures}
+% \expandafter\newcommand\csname inVal0\endcsname{.5}
+% \expandafter\newcommand\csname inVal1\endcsname{.9}
+% \expandafter\newcommand\csname inVal2\endcsname{-.3}
+% \expandafter\newcommand\csname hid0Weight0\endcsname{1}
+% \expandafter\newcommand\csname hid0Weight1\endcsname{-2}
+% \expandafter\newcommand\csname hid0Weight2\endcsname{2}
+% \expandafter\newcommand\csname hid1Weight0\endcsname{2}
+% \expandafter\newcommand\csname hid1Weight1\endcsname{1}
+% \expandafter\newcommand\csname hid1Weight2\endcsname{4}
+% \expandafter\newcommand\csname hid2Weight0\endcsname{1}
+% \expandafter\newcommand\csname hid2Weight1\endcsname{-1}
+% \expandafter\newcommand\csname hid2Weight2\endcsname{0}
 
-    \begin{columns}
-        \begin{column}{0.4\textwidth}
-            \begin{enumerate}
-                \item Consider A
-                \item ... do not forget B
-            \end{enumerate}
-        \end{column}
-        \begin{column}{0.4\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{logos/hgf_key_technologies.jpg}
-        \end{column}
-    \end{columns}
-\end{frame}
+% \expandafter\newcommand\csname out0Weight0\endcsname{-3}
+% \expandafter\newcommand\csname out0Weight1\endcsname{1}
+% \expandafter\newcommand\csname out0Weight2\endcsname{-3}
+% \expandafter\newcommand\csname out1Weight0\endcsname{0}
+% \expandafter\newcommand\csname out1Weight1\endcsname{1}
+% \expandafter\newcommand\csname out1Weight2\endcsname{2}
+% \renewcommand{\inText}[1]{
+%  $\num{\csname inVal#1\endcsname}$
+% }
+% \expandafter\newcommand\csname hidVal0\endcsname{.13}
+% \expandafter\newcommand\csname hidVal1\endcsname{.96}
+% \expandafter\newcommand\csname hidVal2\endcsname{.40}
+% \renewcommand{\hidText}[1]{
+%  \only<1-2>{$H_{#1}$}%
+%  \only<3->{%
+%   $\num{\csname hidVal#1\endcsname}$
+%  }%
+% }
+% \expandafter\newcommand\csname outVal0\endcsname{.35}
+% \expandafter\newcommand\csname outVal1\endcsname{.85}
+% \renewcommand{\outText}[1]{
+%  \only<1-4>{$O_{#1}$}%
+%  \only<5->{%
+%   $\num{\csname outVal#1\endcsname}$
+%  }%
+% }
+% \renewcommand{\synapseIHText}[2]{%
+%  \only<2->{\ifthenelse{\equal{#1}{1}}
+%  {}{\num{\csname hid#2Weight#1\endcsname}}}%
+% }
+% \renewcommand{\synapseHOText}[2]{%
+%  \only<4->{\num{\csname out#2Weight#1\endcsname}}%
+% }
 
-\begin{frame}[fragile]
-    \frametitle{Code}
-    
-    \emph{Note the [fragile] specifier next to frame and the code indentation.}
-    
-\begin{lstlisting}[language=Python]
-import numpy as np
+% \begin{frame}
+%  \frametitle{Artificial Neural Networks II}
+%  \begin{center}
+%   \tikzANN{}
+%  \end{center}
+% \end{frame}
 
-def foo(a, b):
-    """
-    asd
-    """
-    return a + b + 1
-\end{lstlisting}
-\end{frame}
-
-\section{Sections look like this}
+  
 
 \end{document}

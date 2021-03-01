@@ -1,0 +1,92 @@
+\providecommand{\inText}[1]{$I_{#1}$}%
+\providecommand{\hidTextN}[2]{$H^{(#2)}_{#1}$}%
+\providecommand{\outText}[1]{$O_{#1}$}%
+\providecommand{\synapseIHText}[2]{}%
+\providecommand{\synapseHOText}[2]{}%
+\providecommand{\synapseHHText}[2]{}%
+\newcommand{\tikzMLPResetTextCommands}{%
+\renewcommand{\inText}[1]{$I_{##1}$}%
+\renewcommand{\hidTextN}[2]{$H_{##1##2}$}%
+\renewcommand{\outText}[1]{$O_{##1}$}%
+\renewcommand{\synapseIHText}[2]{}%
+\renewcommand{\synapseHOText}[2]{}%
+}
+
+\makeatletter
+\newcommand{\tikzMLP@InputLayerTitle}{Input\\Layer}%
+\newcommand{\tikzMLP@HiddenLayerTitle}{Hidden\\Layers}%
+\newcommand{\tikzMLP@OutputLayerTitle}{Output\\Layer}%
+\providecommand{\tikzMLPInputLayerTitle} {\tikzMLP@InputLayerTitle}%
+\providecommand{\tikzMLPHiddenLayerTitle}{\tikzMLP@HiddenLayerTitle}%
+\providecommand{\tikzMLPOutputLayerTitle}{\tikzMLP@OutputLayerTitle}%
+\makeatother
+
+\newcommand{\tikzMLPResetTitleCommands}{%
+\makeatletter
+\renewcommand{\tikzMLPInputLayerTitle} {\tikzMLP@InputLayerTitle}%
+\renewcommand{\tikzMLPHiddenLayerTitle}{\tikzMLP@HiddenLayerTitle}%
+\renewcommand{\tikzMLPOutputLayerTitle}{\tikzMLP@OutputLayerTitle}%
+\makeatother
+}
+\newcommand\tikzMLP[2]
+{
+ \begin{tikzpicture} [
+  neuron/.style={circle,minimum size=2em,align=center},
+  inNeuron/.style={neuron,draw=blue,fill=blue!20},
+  hiddenNeuron/.style={neuron,draw=green,fill=green!20},
+  outNeuron/.style={neuron,draw=red,fill=red!20},
+  every node/.append style={node distance=2em,inner sep=0pt},
+  #1
+ ]
+  \node[inNeuron] (in 0) {\inText{0}};
+  \node[inNeuron, below=of in 0] (in 1) {\inText{1}};
+  \node[inNeuron, below=of in 1] (in 2) {\inText{2}};
+
+  \node[hiddenNeuron, right=of in 0] (hid 0-0) {\hidTextN{0}{0}}; 
+  \node[hiddenNeuron, right=of in 1] (hid 1-0) {\hidTextN{1}{0}}; 
+  \node[hiddenNeuron, right=of in 2] (hid 2-0) {\hidTextN{2}{0}}; 
+
+  \node[hiddenNeuron, right=of hid 0-0] (hid 0-1) {\hidTextN{0}{1}}; 
+  \node[hiddenNeuron, right=of hid 1-0] (hid 1-1) {\hidTextN{1}{1}}; 
+  \node[hiddenNeuron, right=of hid 2-0] (hid 2-1) {\hidTextN{2}{1}}; 
+
+  \node[right=1em of hid 0-1] (hiddd 0) {$\ldots$}; 
+  \node[right=1em of hid 1-1] (hiddd 1) {$\ldots$}; 
+  \node[right=1em of hid 2-1] (hiddd 2) {$\ldots$}; 
+
+  \node[hiddenNeuron, right=1em of hiddd 0] (hid 0-n) {\hidTextN{0}{N}}; 
+  \node[hiddenNeuron, right=1em of hiddd 1] (hid 1-n) {\hidTextN{1}{N}}; 
+  \node[hiddenNeuron, right=1em of hiddd 2] (hid 2-n) {\hidTextN{2}{N}}; 
+
+  \node[inner sep=0em,outer sep=0em, fit=(hid 0-0) (hid 2-0) (hid 0-n) (hid 2-n)] (hidG) {};
+  \node[inner sep=0em,outer sep=0em, fit=(hid 0-n) (hid 1-n)] (hidG 01) {};
+  \node[inner sep=0em,outer sep=0em, fit=(hid 2-n) (hid 1-n)] (hidG 12) {};
+
+  \node[outNeuron, right=of hidG 01] (out 0) {\outText{0}}; 
+  \node[outNeuron, right=of hidG 12] (out 1) {\outText{1}}; 
+
+  \foreach \a in {0,...,2} {
+   \foreach \s in {0,...,2} {
+    \draw (in \a) -- (hid \s-0) node[near start,sloped,above,
+     outer sep=0ex,inner sep=.2ex] {\synapseIHText{\a}{\s}};
+   }}
+
+  \foreach \a in {0,...,2} {
+   \foreach \s in {0,...,2} {
+    \draw (hid \a-0) -- (hid \s-1) node[near start,sloped,above,
+     outer sep=0ex,inner sep=.2ex] {\synapseHHText{\a}{\s}};
+   }}
+
+  \foreach \a in {0,...,2} {
+   \foreach \s in {0,...,1} {
+    \draw (hid \a-n) -- (out \s) node[near start,sloped,above,
+     outer sep=0ex,inner sep=.2ex] {\synapseHOText{\a}{\s}};
+   }}
+
+  \node[above=1.5em of in 0,align=center] {\tikzMLPInputLayerTitle};
+  \node[above=1.5em of hidG,align=center] (hidTitle) {\tikzMLPHiddenLayerTitle};
+  \node[anchor=center,align=center] at (out 0 |- hidTitle) {\tikzMLPOutputLayerTitle};
+
+  #2
+ \end{tikzpicture}
+}

@@ -1,11 +1,15 @@
 %% V0.1
 %% 2020/10/09
-%% by Markus Goetz
+%% by Markus Götz, Björn Hagemeier, James Kahn
 
 % slide geometry
 \setbeamersize{%
     text margin left=0.8cm,
-    text margin right=0.8cm
+    text margin right=0.8cm,
+    sidebar width left=0cm,
+    sidebar width right=0cm,
+    mini frame size=0cm,
+    mini frame offset=0cm
 }
 
 % background canvas
@@ -107,12 +111,15 @@
 %% general
 \defbeamertemplate{headline}{empty}{}
 \setbeamertemplate{footline}{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.2cm]{}
+    \end{beamercolorbox}
     \hspace{0.8cm}
     \usebeamercolor[fg]{title}\insertauthor\enspace\vrule width0.3pt\enspace\inserttitle%
     \vspace{0.06cm}
 }
 \setbeamertemplate{navigation symbols}{%
-    \vspace{-6pt}
+    \begin{beamercolorbox}[wd=\paperwidth,ht=\dimexpr\paperheight-6pt]{}
+    \end{beamercolorbox}
     \usebeamercolor[fg]{title}\usebeamerfont*{navigation symbols}\insertframenumber/\inserttotalframenumber
 }
 \setbeamertemplate{section in toc}{%
@@ -171,6 +178,7 @@
 \def\maketitle{%
 {%
     \setbeamertemplate{footline}{} 
+    \setbeamertemplate{navigation symbols}{} 
     \ifbeamer@inframe%
         \titlepage%
         % resetting the background does not work for inframe, since empty title theme template cannot be set after \frame{...} here
