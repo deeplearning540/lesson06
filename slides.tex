@@ -76,7 +76,7 @@
 
 %\usepackage{etex}
 \usepackage{tikz}
-\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,positioning,fit,petri,calc,shapes.geometric,scopes,fit,spy}
+\usetikzlibrary{arrows.meta,arrows,decorations.pathmorphing,backgrounds,positioning,fit,petri,calc,shapes.geometric,scopes,fit,spy}
 \usepackage{pgfplots}
 \pgfplotsset{,compat=1.11}
 \tikzset{/pgf/number format/1000 sep={\,}}
@@ -266,29 +266,68 @@
 
  \begin{frame}
    \frametitle{Stochastic gradient descent}
-   
+   \vspace{-1em}
 \begin{columns}
-  \begin{column}{.45\textwidth}
-    
-    \begin{block}{mini-batch based stochastic gradient descent}
-
-      \begin{equation*}
-\vartheta_{s+1} = \vartheta_{s} + \eta \nabla_{\vartheta}L( \vec{y}^{\,true}, f(\vec{x}, \vartheta_{s}))
+  \begin{column}{.475\textwidth}
+    \begin{equation*}
+\vartheta_{s+1} = \vartheta_{s} + \frac{\eta}{k} \sum_{b=1}^{k} \nabla_{\vartheta}L_b( \vec{y}^{\,true}_b, f(\vec{x}_b, \vartheta_{s}))
 \end{equation*}
 
-\begin{itemize}
-\item randomly split training set in mini batches, e.g. $b=32$
-\item completing one batch is referred to as a \texttt{step}
-\item completing the entire dataset is referred to as an \texttt{epoch}
-\end{itemize}
+\begin{block}{mini-batch based stochastic gradient descent}
+
+  \begin{itemize}
+  \item randomly split training set in mini batches, e.g. $b=32$
+  \item completing one batch is referred to as a \texttt{step}
+  \item completing the entire dataset is referred to as an \texttt{epoch}
+  \item after each epoch: batches are randomized again
+  \end{itemize}
 \end{block}
 \end{column}
 
-\begin{column}{.45\textwidth}
+\begin{column}{.475\textwidth}
+  \centering
+  \textbf{loss landscape}
   \footnotesize
-  \includegraphics[width=\textwidth]{figures/stepsize}\\
+  \includegraphics[width=.9\textwidth]{figures/stepsize}\\
   from \href{https://cs231n.github.io/optimization-1/}{Stanford CS231n}
   \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Loss function: categorical cross-entropy}
+
+ \begin{columns}
+ \begin{column}{.49\textwidth}
+ \begin{exampleblock}{in general}
+   \begin{align*}
+     H(p, q) &= - \sum_{x \in \mathcal{X}} p(x) \log q(x)\\
+             &= H(p) + D_{KL}(p || q)
+ \end{align*}
+   \begin{itemize}
+   \item from information theory
+   \item defined above between two discrete probability distributions $p$ and $q$
+   \item relates to the Kullback-Leibler divergence
+   \end{itemize}
+ \end{exampleblock}
+\end{column}
+
+ \begin{column}{.49\textwidth}
+ \begin{exampleblock}{for binary classification}
+   \begin{itemize}
+   \item probability $p$ refers to the true label
+   \item probability $q$ refers to the predicted label (as output of the softmax layer)
+ \end{itemize}
+ 
+   \begin{align*}
+ L( \vec{y}^{\,true}, f(\vec{x}, \vartheta)) &= - \sum_{x \in \mathcal{X}} p(x) \log q(x) \\
+                                             &= - p_{y=1} \log q_{\hat{y}=1} \\
+                                               &\quad - (1-p_{y=0}) \log (1-q_{\hat{y}=0})
+   \end{align*}
+   
+\end{exampleblock}
+
+\end{column}
 \end{columns}
 
 
@@ -296,110 +335,163 @@
 
 
  \begin{frame}
- \frametitle{Artificial Neural Networks simplified}
- \begin{center}
-  \tikzANN{}
-\end{center}
+ \frametitle{Softmax Activation}
+ \begin{equation*}
+\sigma(x_i) = \frac{\exp{x_i}}{\sum_{j=1}^{n} \exp{x_j}}
+\end{equation*}
+\begin{itemize}
+\item mapping of input $x \in \mathbb{R}^n$ to output $\mathbb{R}^n$
+\item common activation layer for classification networks in last layer
+\item outputs are $(0,1)$
+\item converts input to probability distribution over predicted output classes
+\end{itemize}
+\end{frame}
 
+\renewcommand{\inText}[1]{
+ $I_{#1}$
+}
+\renewcommand{\hidText}[1]{
+ {$F_{relu}(H_{#1})$}%
+}
+\renewcommand{\outText}[1]{
+ $F_{smax}(O_{#1})$%
+}
+\renewcommand{\synapseIHText}[2]{%
+ {\ifthenelse{\equal{#1}{1}}{}{\small$W^{(I)}_{#1#2}$}}}
+\renewcommand{\synapseHOText}[2]{\small$W^{(H)}_{#1#2}$}
+
+ \begin{frame}
+ \frametitle{A Simple MLP}
+
+ \begin{columns}
+   \begin{column}{.7\textwidth}
+     \tikzANNwBottomIns{neuron/.append style={minimum size=2em}}
+     {\node[below=.6em of hid 2] {%
+         $+\vec{b_H}$};
+       \node[below=.6em of out 1] {%
+         $+\vec{b_O}$};
+     }
+   \end{column}
+   \begin{column}{.28\textwidth}
+     
+     \begin{exampleblock}{But how to compute the gradient?}
+       \vspace{-1em}
+       \Large
+       \begin{equation*}
+         \nabla_{\vartheta}L ( \vec{y}^{\,true}, f(\vec{x}, \vartheta) )
+       \end{equation*}
+       \small
+       \centering
+     ($\vartheta \in \{W^{(i)}, b_i\}$)
+   \end{exampleblock}
+     
+   \end{column}
+ \end{columns}
+ 
 \end{frame}
 
 \begin{frame}
- \frametitle{Artificial Neural Networks---Activation functions}
- \begin{columns}
-  \begin{column}{\linewidth/5*3}
-   \begin{tikzpicture}
-     \begin{axis} [
-       grid=both,minor tick num=0,
-      legend pos=north west,
-      legend/.style={font=\small},
-      xmin=-2,xmax=2,
-      ymin=-.1,ymax=1.1,
-      xlabel=$x$,
-      width=\linewidth,
-     ]
-     \addplot[mark=none,blue] {1/(1+exp(-x))};
-     \addlegendentry{$\sigma(x)$}
-     % \only<2>{
-      \addplot[mark=none,domain=-2:0] {0};
-      \addplot[mark=none,domain=0:2] {x};
-      \addlegendentry{$R(x)$}
-     %}
-    \end{axis}
-   \end{tikzpicture}
-  \end{column}
-  \begin{column}{\linewidth/5*2}
-   \begin{itemize}
-    \item sigmoid
-     \[
-      \sigma(x) = \frac{1}{1+\mathrm{e}^{-x}}
-     \]
-    \item<2> ReLU (scaled)
-     \[
-      R(x) = \begin{cases}
-       0 & x \leq 0 \\
-       x & x > 0\\
-      \end{cases}
-     \]
-   \end{itemize}
-  \end{column}
- \end{columns}
+  \frametitle{Backpropagation in 1D}
+  \centering
+  \vspace{-5em}
+ \begin{tikzpicture}[shorten >=1pt,node distance=3cm,auto]
+   
+   \node[ultra thick, draw, circle] (input) {Input $x$};
+   \node[ultra thick, draw, ellipse] (hidden) [right of=input] {$F(w \cdot x + b)$};
+   \node[ultra thick, draw, circle] (output) [right of=hidden] {Output $o$};
+   \node[ultra thick, draw, rectangle, minimum width=2.5cm] (loss) [right of=output] {$\mathcal{L}(y, \hat{y})$};
+
+   \path[->] (input) edge node {w} (hidden)
+   (hidden) edge (output)
+   (output) edge node {$\hat{y}$} (loss);
+
+   \node (ytrue) [right of=loss, node distance=2cm] {$y$};
+   \path[->] (ytrue) edge (loss);
+   
+ \end{tikzpicture}
+ \vfill
+ 
 \end{frame}
 
-%% input to MLP
+\begin{frame}
+  \frametitle{Backpropagation in 1D, plugging in numbers}
+  \centering
+  \vspace{-5em}
+ \begin{tikzpicture}[shorten >=1pt,node distance=3cm,auto]
 
-% \expandafter\newcommand\csname inVal0\endcsname{.5}
-% \expandafter\newcommand\csname inVal1\endcsname{.9}
-% \expandafter\newcommand\csname inVal2\endcsname{-.3}
-% \expandafter\newcommand\csname hid0Weight0\endcsname{1}
-% \expandafter\newcommand\csname hid0Weight1\endcsname{-2}
-% \expandafter\newcommand\csname hid0Weight2\endcsname{2}
-% \expandafter\newcommand\csname hid1Weight0\endcsname{2}
-% \expandafter\newcommand\csname hid1Weight1\endcsname{1}
-% \expandafter\newcommand\csname hid1Weight2\endcsname{4}
-% \expandafter\newcommand\csname hid2Weight0\endcsname{1}
-% \expandafter\newcommand\csname hid2Weight1\endcsname{-1}
-% \expandafter\newcommand\csname hid2Weight2\endcsname{0}
+   \node[dashed,draw, rectangle, text width=1.25cm, align=right] (fixed) [left of=input, node distance=2cm] {$x=2$ $w=.5$ $b=1$};
+   
+   \node[ultra thick, draw, circle] (input) {Input $x$};
+   \node[ultra thick, draw, ellipse] (hidden) [right of=input] {$F(w \cdot x + b)$};
+   \node[ultra thick, draw, circle] (output) [right of=hidden] {Output $o$};
+   \node[ultra thick, draw, rectangle, minimum width=2.5cm] (loss) [right of=output] {$\mathcal{L}(y, \hat{y})$};
 
-% \expandafter\newcommand\csname out0Weight0\endcsname{-3}
-% \expandafter\newcommand\csname out0Weight1\endcsname{1}
-% \expandafter\newcommand\csname out0Weight2\endcsname{-3}
-% \expandafter\newcommand\csname out1Weight0\endcsname{0}
-% \expandafter\newcommand\csname out1Weight1\endcsname{1}
-% \expandafter\newcommand\csname out1Weight2\endcsname{2}
-% \renewcommand{\inText}[1]{
-%  $\num{\csname inVal#1\endcsname}$
-% }
-% \expandafter\newcommand\csname hidVal0\endcsname{.13}
-% \expandafter\newcommand\csname hidVal1\endcsname{.96}
-% \expandafter\newcommand\csname hidVal2\endcsname{.40}
-% \renewcommand{\hidText}[1]{
-%  \only<1-2>{$H_{#1}$}%
-%  \only<3->{%
-%   $\num{\csname hidVal#1\endcsname}$
-%  }%
-% }
-% \expandafter\newcommand\csname outVal0\endcsname{.35}
-% \expandafter\newcommand\csname outVal1\endcsname{.85}
-% \renewcommand{\outText}[1]{
-%  \only<1-4>{$O_{#1}$}%
-%  \only<5->{%
-%   $\num{\csname outVal#1\endcsname}$
-%  }%
-% }
-% \renewcommand{\synapseIHText}[2]{%
-%  \only<2->{\ifthenelse{\equal{#1}{1}}
-%  {}{\num{\csname hid#2Weight#1\endcsname}}}%
-% }
-% \renewcommand{\synapseHOText}[2]{%
-%  \only<4->{\num{\csname out#2Weight#1\endcsname}}%
-% }
+   \path[->] (input) edge node {w} (hidden)
+   (hidden) edge (output)
+   (output) edge node {$\hat{y}$} (loss);
 
-% \begin{frame}
-%  \frametitle{Artificial Neural Networks II}
-%  \begin{center}
-%   \tikzANN{}
-%  \end{center}
-% \end{frame}
+   \node (ytrue) [right of=loss, node distance=2cm] {$y$};
+   \path[->] (ytrue) edge (loss);
+   
+ \end{tikzpicture}
+ \vfill
+
+\end{frame}
+
+\renewcommand{\inText}[1]{
+ $I_{#1}$
+}
+\renewcommand{\hidText}[1]{
+ {$H_{#1}$}%
+}
+\renewcommand{\outText}[1]{
+ $O_{#1}$%
+}
+\renewcommand{\synapseIHText}[2]{%
+ {\ifthenelse{\equal{#1}{1}}{}{\small$W^{(I)}_{#1#2}$}}}
+\renewcommand{\synapseHOText}[2]{\small$W^{(H)}_{#1#2}$}
+
+\begin{frame}
+ \frametitle{For a single weight}
+
+ \centering
+     \tikzANNwBottomIns{neuron/.append style={minimum size=2em}}
+     { \node (lastmid) at($(out 0)!.5!(out 1)$) {};
+       \node[draw,circle, minimum width=1.75em] (yhatlabel) [right of=lastmid, node distance=1.5cm] {$\hat{y}$};
+       \path[-] (out 0) edge (yhatlabel)
+                 (out 1) edge (yhatlabel);
+      %  \node[below=.6em of out 1] {%
+      %    $+\vec{b_O}$};
+     }
+
+     \begin{equation*}
+       \frac{\partial \mathcal{L}}{\partial W^{I}_{00}} = \frac{\partial \mathcal{L}}{\partial \hat{y}} %
+       \frac{\partial \hat{y}}{\partial O_{0}}%
+       \frac{\partial O_{0}}{\partial W_{00}^{H}}%
+       \frac{\partial W_{00}^{H}}{\partial W_{00}^{I}} + %
+       \frac{\partial \mathcal{L}}{\partial \hat{y}} %
+       \frac{\partial \hat{y}}{\partial O_{1}}%
+       \frac{\partial O_{1}}{\partial W_{01}^{H}}%
+       \frac{\partial W_{01}^{H}}{\partial W_{00}^{I}}
+     \end{equation*}
+     
+ 
+\end{frame}
+
+ \begin{frame}
+     \frametitle{Take Aways}
+
+     \vfill
+     \begin{itemize}\Large
+     \item (mini-batch) stochastic gradient descent (SGD) typically default optimizers for deep learning
+     \item weight update rule governs how to update model parameters
+     \item loss function defines optimisation landscape
+     \item gradient for weight update obtained by backpropagation (chain rule)
+     \end{itemize}
+     \vfill
+     
+   \end{frame}
+   
 
    \begin{frame}
      \frametitle{Further Reading}
@@ -407,9 +499,55 @@
      \vfill
      \begin{itemize}
      \item Excellent overview of optimisation algorithms \href{https://ruder.io/optimizing-gradient-descent/}{ruder.io/optimizing-gradient-descent}
-     \item a classic resource getting introduced to gradient descent \href{https://cs231n.github.io/optimization-1/}{Stanford CS231n}
+     \item a classic resource getting introduced to gradient descent at \href{https://cs231n.github.io/optimization-1/}{Stanford CS231n} course
+       
+     \item cross-entropy \href{https://towardsdatascience.com/data-science-interview-deep-dive-cross-entropy-loss-b10355eb4ace}{well explained for the statistically inclined}
      \end{itemize}
      \vfill
    \end{frame}
 
+% \begin{frame}
+%  \frametitle{Artificial Neural Networks---Activation functions}
+%  \begin{columns}
+%   \begin{column}{\linewidth/5*3}
+%    \begin{tikzpicture}
+%      \begin{axis} [
+%        grid=both,minor tick num=0,
+%       legend pos=north west,
+%       legend/.style={font=\small},
+%       xmin=-2,xmax=2,
+%       ymin=-.1,ymax=1.1,
+%       xlabel=$x$,
+%       width=\linewidth,
+%      ]
+%      \addplot[mark=none,blue] {1/(1+exp(-x))};
+%      \addlegendentry{$\sigma(x)$}
+%      % \only<2>{
+%       \addplot[mark=none,domain=-2:0] {0};
+%       \addplot[mark=none,domain=0:2] {x};
+%       \addlegendentry{$R(x)$}
+%      %}
+%     \end{axis}
+%    \end{tikzpicture}
+%   \end{column}
+%   \begin{column}{\linewidth/5*2}
+%    \begin{itemize}
+%     \item sigmoid
+%      \[
+%       \sigma(x) = \frac{1}{1+\mathrm{e}^{-x}}
+%      \]
+%     \item ReLU
+%      \[
+%       R(x) = \begin{cases}
+%        0 & x \leq 0 \\
+%        x & x > 0\\
+%       \end{cases}
+%     \]
+    
+%    \end{itemize}
+%   \end{column}
+%  \end{columns}
+% \end{frame}
+
+   
 \end{document}
