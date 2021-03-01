@@ -5,4 +5,4 @@ all: slides.pdf
 	xelatex -synctex=1 -interaction=nonstopmode $<
 
 clean :
-	@rm -fv *vrb *snm *aux *toc *out *nav *synctex.gz *.log
+	@rm -fv *vrb *snm *aux *toc *out *nav *synctex.gz *.log *pdf
