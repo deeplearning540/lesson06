@@ -214,10 +214,10 @@
      \begin{equation*}
      \vartheta \approx \argmin_{\vartheta} \mathcal{L}( \vec{y}^{\,true}, f(\vec{x}, \vartheta) )
    \end{equation*}
-   \item during optimisation with gradient descent, parameters $\vartheta$ at step $s$ are given by
-     
+   \item during optimisation with gradient descent, parameters $\vartheta$ at step $s+1$ are given by
+
      \begin{equation*}
-\vartheta_{s+1} = \vartheta_{s} + \eta \nabla_{\vartheta}L( \vec{y}^{\,true}, f(\vec{x}, \vartheta_{s}))
+\vartheta_{s+1} = \vartheta_{s} - \eta \nabla_{\vartheta}\mathcal{L}( \vec{y}^{\,true}, f(\vec{x}, \vartheta_{s}))
 \end{equation*}
 
    \end{itemize}
@@ -231,12 +231,12 @@
  \frametitle{Weight Update Rule}
 
  \begin{equation*}
-\vartheta_{s+1} = \vartheta_{s} + \eta \nabla_{\vartheta}L( \vec{y}^{\,true}, f(\vec{x}, \vartheta_{s}))
+\vartheta_{s+1} = \vartheta_{s} - \eta \nabla_{\vartheta}\mathcal{L}( \vec{y}^{\,true}, f(\vec{x}, \vartheta_{s}))
 \end{equation*}
 
 \begin{exampleblock}{gradient descent}
   \begin{center}
-    free parameter $\eta$ known as the learning rate
+    free parameter $\eta$ is known as the step size or learning rate
   \end{center}
 \end{exampleblock}
 
@@ -270,7 +270,7 @@
 \begin{columns}
   \begin{column}{.475\textwidth}
     \begin{equation*}
-\vartheta_{s+1} = \vartheta_{s} + \frac{\eta}{k} \sum_{b=1}^{k} \nabla_{\vartheta}L_b( \vec{y}^{\,true}_b, f(\vec{x}_b, \vartheta_{s}))
+\vartheta_{s+1} = \vartheta_{s} - \frac{\eta}{k} \sum_{b=1}^{k} \nabla_{\vartheta}\mathcal{L}_b( \vec{y}^{\,true}_b, f(\vec{x}_b, \vartheta_{s}))
 \end{equation*}
 
 \begin{block}{mini-batch based stochastic gradient descent}
@@ -320,7 +320,7 @@
  \end{itemize}
  
    \begin{align*}
- L( \vec{y}^{\,true}, f(\vec{x}, \vartheta)) &= - \sum_{x \in \mathcal{X}} p(x) \log q(x) \\
+ \mathcal{L}( \vec{y}^{\,true}, f(\vec{x}, \vartheta)) &= - \sum_{x \in \mathcal{X}} p(x) \log q(x) \\
                                              &= - p_{y=1} \log q_{\hat{y}=1} \\
                                                &\quad - (1-p_{y=1}) \log (1-q_{\hat{y}=1})
    \end{align*}
@@ -378,7 +378,7 @@
        \vspace{-1em}
        \Large
        \begin{equation*}
-         \nabla_{\vartheta}L ( \vec{y}^{\,true}, f(\vec{x}, \vartheta) )
+         \nabla_{\vartheta}\mathcal{L} ( \vec{y}^{\,true}, f(\vec{x}, \vartheta) )
        \end{equation*}
        \small
        \centering
