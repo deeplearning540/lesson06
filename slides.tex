@@ -10,7 +10,7 @@
 %\usepackage[UKenglish]{babel}
 
 %my favourite packages
-%\usepackage[latin1]{inputenc} %type in accented characters easily, i. e. ä instead of \"a 
+%\usepackage[latin1]{inputenc} %type in accented characters easily, i. e. ä instead of \"a
 %\usepackage{siunitx} %easy input & nice formatting of phys. quantities (number + SI unit)
 %\usepackage{latexsym}
 %\usepackage{amssymb}
@@ -101,7 +101,7 @@
 \title{%
  How did we learn
 }
-\subtitle{DeepLearning540 - Lesson 06 
+\subtitle{DeepLearning540 - Lesson 06
 }
 %[short version of authors to be used in footlines]{long version in the title page}
 \author{{Peter Steinbach}}
@@ -157,10 +157,10 @@
 \input{code/pygments.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 
 \begin{document}
- 
+
 \maketitle
 
 \begin{frame}
@@ -177,18 +177,18 @@
 
  \begin{block}{outputs}
    \begin{itemize}
-   \item probability for being of \texttt{Adelie} or \texttt{not Adelie} 
+   \item probability for being of \texttt{Adelie} or \texttt{not Adelie}
    \item using one-hot-encoding
    \item 2 outputs means  $\vec{y} \in \mathbb{R}^{2}$
    \end{itemize}
  \end{block}
 
- 
+
  \begin{alertblock}{Note}
  \centering
    \textbf{classification with supervised learning!}
  \end{alertblock}
-   
+
 
 \end{frame}
 
@@ -197,7 +197,7 @@
  \frametitle{Code that needs (some) explanation}
 
  \input{code/keras_model_compile.tex}
- 
+
 \end{frame}
 
 \begin{frame}
@@ -206,11 +206,11 @@
   \begin{exampleblock}{}
    \begin{itemize}
    \item given $m$ input pairs in a dataset $\mathcal{D} = \{\langle \vec{x}_i, y_i\rangle \dots \}$ with $x \in \mathbb{R}^n$, $y \in \mathbb{R}$
-   \item we would like to train a model $f$ with parameters $\vartheta$ such that 
+   \item we would like to train a model $f$ with parameters $\vartheta$ such that
      \begin{equation*}
      \vec{y} = f(\vec{x}, \vartheta)
    \end{equation*}
-   \item we optimize a loss function $\mathcal{L}$ in such a fashion that 
+   \item we optimize a loss function $\mathcal{L}$ in such a fashion that
      \begin{equation*}
      \vartheta \approx \argmin_{\vartheta} \mathcal{L}( \vec{y}^{\,true}, f(\vec{x}, \vartheta) )
    \end{equation*}
@@ -223,7 +223,7 @@
    \end{itemize}
  \end{exampleblock}
   \vfill
-  
+
 \end{frame}
 
 
@@ -251,14 +251,14 @@
 \end{column}
 
 \begin{column}{.45\textwidth}
-  
+
   \begin{alertblock}{``Online'' Gradient Descent}
     \begin{itemize}
     \item using the one datum at a time
-    \item problem: expensive to compute, strongly depends on $eta$
+    \item problem: expensive to compute, strongly depends on $\eta$
     \end{itemize}
   \end{alertblock}
-    
+
   \end{column}
 \end{columns}
 
@@ -318,13 +318,13 @@
    \item probability $p$ refers to the true label
    \item probability $q$ refers to the predicted label (as output of the softmax layer)
  \end{itemize}
- 
+
    \begin{align*}
  \mathcal{L}( \vec{y}^{\,true}, f(\vec{x}, \vartheta)) &= - \sum_{x \in \mathcal{X}} p(x) \log q(x) \\
                                              &= - p_{y=1} \log q_{\hat{y}=1} \\
                                                &\quad - (1-p_{y=1}) \log (1-q_{\hat{y}=1})
    \end{align*}
-   
+
 \end{exampleblock}
 
 \end{column}
@@ -373,7 +373,7 @@
      }
    \end{column}
    \begin{column}{.28\textwidth}
-     
+
      \begin{exampleblock}{But how to compute the gradient?}
        \vspace{-1em}
        \Large
@@ -384,10 +384,10 @@
        \centering
      ($\vartheta \in \{W^{(i)}, b_i\}$)
    \end{exampleblock}
-     
+
    \end{column}
  \end{columns}
- 
+
 \end{frame}
 
 \begin{frame}
@@ -395,7 +395,7 @@
   \centering
   \vspace{-5em}
  \begin{tikzpicture}[shorten >=1pt,node distance=3cm,auto]
-   
+
    \node[ultra thick, draw, circle] (input) {Input $x$};
    \node[ultra thick, draw, ellipse] (hidden) [right of=input] {$F(w \cdot x + b)$};
    \node[ultra thick, draw, circle] (output) [right of=hidden] {Output $o$};
@@ -407,10 +407,10 @@
 
    \node (ytrue) [right of=loss, node distance=2cm] {$y$};
    \path[->] (ytrue) edge (loss);
-   
+
  \end{tikzpicture}
  \vfill
- 
+
 \end{frame}
 
 \begin{frame}
@@ -420,7 +420,7 @@
  \begin{tikzpicture}[shorten >=1pt,node distance=3cm,auto]
 
    \node[dashed,draw, rectangle, text width=1.25cm, align=right] (fixed) [left of=input, node distance=2cm] {$x=2$ $w=.5$ $b=1$};
-   
+
    \node[ultra thick, draw, circle] (input) {Input $x$};
    \node[ultra thick, draw, ellipse] (hidden) [right of=input] {$F(w \cdot x + b)$};
    \node[ultra thick, draw, circle] (output) [right of=hidden] {Output $o$};
@@ -432,7 +432,7 @@
 
    \node (ytrue) [right of=loss, node distance=2cm] {$y$};
    \path[->] (ytrue) edge (loss);
-   
+
  \end{tikzpicture}
  \vfill
 
@@ -474,8 +474,8 @@
        \frac{\partial O_{1}}{\partial W_{01}^{H}}%
        \frac{\partial W_{01}^{H}}{\partial W_{00}^{I}}
      \end{equation*}
-     
- 
+
+
 \end{frame}
 
  \begin{frame}
@@ -489,9 +489,9 @@
      \item gradient for weight update obtained by backpropagation (chain rule)
      \end{itemize}
      \vfill
-     
+
    \end{frame}
-   
+
 
    \begin{frame}
      \frametitle{Further Reading}
@@ -500,12 +500,12 @@
      \begin{itemize}
      \item Excellent overview of optimisation algorithms \href{https://ruder.io/optimizing-gradient-descent/}{ruder.io/optimizing-gradient-descent}
      \item a classic resource getting introduced to gradient descent at \href{https://cs231n.github.io/optimization-1/}{Stanford CS231n} course
-       
+
      \item cross-entropy \href{https://towardsdatascience.com/data-science-interview-deep-dive-cross-entropy-loss-b10355eb4ace}{well explained for the statistically inclined}
      \item \href{https://mml-book.github.io/}{Mathematics for Machine Learning book} by Deisenroth, A. Aldo Faisal, and Cheng Soon Ong is an excellent resource to learn about mathematical tools used for ML
-       
+
      \item some of the material is based on and inspired by Sebastian Raschka's lecture \href{L6.2 Understanding Automatic Differentiation via Computation Graphs}{https://youtu.be/oY6-i2Ybin4}
-       
+
      \end{itemize}
      \vfill
    \end{frame}
@@ -547,11 +547,11 @@
 %        x & x > 0\\
 %       \end{cases}
 %     \]
-    
+
 %    \end{itemize}
 %   \end{column}
 %  \end{columns}
 % \end{frame}
 
-   
+
 \end{document}
